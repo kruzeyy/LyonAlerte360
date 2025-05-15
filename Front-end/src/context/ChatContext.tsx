@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+// ChatContext.tsx
+import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { io, Socket } from "socket.io-client";
 
 interface ChatContextType {
   isOpen: boolean;
@@ -29,25 +31,42 @@ interface ChatProviderProps {
   children: ReactNode;
 }
 
-const initialMessages: Message[] = [
-  {
-    id: 1,
-    text: "Bonjour et bienvenue sur LyonAlert360. Comment puis-je vous aider aujourd'hui?",
-    isUser: false,
-    timestamp: new Date(),
-  },
-];
-
 export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>(initialMessages);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [socket, setSocket] = useState<Socket | null>(null);
+
+  useEffect(() => {
+    const newSocket = io("http://localhost:3000"); // Mets ici l'URL de ton backend
+    setSocket(newSocket);
+
+    newSocket.on("message", (message: string) => {
+      addMessage(message, false);
+    });
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
 
   const toggleChat = () => {
     setIsOpen((prev) => !prev);
+
+    // connect to socket when chat is opened
+    if (!isOpen && socket) {
+      socket.connect();
+    } else if (socket) {
+      socket.disconnect();
+    }
   };
 
   const closeChat = () => {
     setIsOpen(false);
+
+    // disconnect from socket when chat is closed
+    if (socket) {
+      socket.disconnect();
+    }
   };
 
   const addMessage = (text: string, isUser: boolean) => {
@@ -58,19 +77,11 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
       timestamp: new Date(),
     };
     setMessages((prev) => [...prev, newMessage]);
+
+    if (socket && isUser) {
+      socket.emit("message", text);
+    }
   };
 
-  return (
-    <ChatContext.Provider
-      value={{
-        isOpen,
-        toggleChat,
-        closeChat,
-        messages,
-        addMessage,
-      }}
-    >
-      {children}
-    </ChatContext.Provider>
-  );
+  return <ChatContext.Provider value={{ isOpen, toggleChat, closeChat, messages, addMessage }}>{children}</ChatContext.Provider>;
 };
