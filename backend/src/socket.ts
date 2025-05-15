@@ -12,17 +12,14 @@ export const setupSocket = (server: HttpServer) => {
 
   io.on("connection", (socket) => {
     console.log("User connected:", socket.id);
+
     socket.on("message", (message) => {
       console.log("Message received:", message);
-      io.emit("message", message);
+      io.emit("message", { text: message, senderId: socket.id });
     });
 
     socket.on("disconnect", () => {
       console.log("User disconnected:", socket.id);
     });
-
-    setInterval(() => {
-      io.emit("message", "[SERVER]: Ceci est un message de test envoyé toutes les 30 secondes.");
-    }, 30000);
   });
 };

@@ -40,8 +40,14 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
     const newSocket = io("http://localhost:3000"); // Mets ici l'URL de ton backend
     setSocket(newSocket);
 
-    newSocket.on("message", (message: string) => {
-      addMessage(message, false);
+    newSocket.on("connect", () => {
+      console.log("Connected with id", newSocket.id);
+    });
+
+    newSocket.on("message", (data: { text: string; senderId: string }) => {
+      if (data.senderId !== newSocket.id) {
+        addMessage(data.text, false);
+      }
     });
 
     return () => {
