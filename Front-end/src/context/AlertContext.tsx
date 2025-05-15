@@ -13,6 +13,18 @@ interface AlertContextType {
   alerts: Alert[];
 }
 
+const zoneNames: Record<string, string> = {
+  "1": "1 ARR - Vieux Lyon",
+  "2": "2 ARR - Presqu'île",
+  "3": "3 ARR - Part-Dieu",
+  "4": "4 ARR - Croix-Rousse",
+  "5": "5 ARR - Point du Jour",
+  "6": "6 ARR - Parc de la Tête d'Or",
+  "7": "7 ARR - Jean Macé / Gerland",
+  "8": "8 ARR - Monplaisir / États-Unis",
+  "9": "9 ARR - Vaise / Gorge de Loup",
+};
+
 const alerts: Alert[] = [
   {
     id: 1,
@@ -20,7 +32,7 @@ const alerts: Alert[] = [
     zones: [9, 5, 4, 1, 2],
     severity: "high",
     timestamp: new Date(),
-    description: "Séisme détecté dans plusieurs zones de Lyon",
+    description: `Séisme détecté dans les zones : ${[9, 5, 4, 1, 2].map((z) => zoneNames[z.toString()]).join(", ")}`,
   },
   {
     id: 2,
@@ -28,7 +40,7 @@ const alerts: Alert[] = [
     zones: [4, 1, 2, 6, 3, 7, 8],
     severity: "medium",
     timestamp: new Date(),
-    description: "Risque d'inondation dans plusieurs secteurs",
+    description: `Risque d'inondation dans les zones : ${[4, 1, 2, 6, 3, 7, 8].map((z) => zoneNames[z.toString()]).join(", ")}`,
   },
 ];
 

@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import Activities from "./pages/Activities";
 import Safety from "./pages/Safety";
 import About from "./pages/About";
+import Legal from "./pages/Legal";
 import Footer from "./components/Footer";
 import { ChatProvider } from "./context/ChatContext";
 import { AlertProvider } from "./context/AlertContext";
@@ -24,10 +25,13 @@ function App() {
                   <Route path="/activities" element={<Activities />} />
                   <Route path="/safety" element={<Safety />} />
                   <Route path="/about" element={<About />} />
+                  <Route path="/legal" element={<Legal />} />
                 </Routes>
               </div>
-              <ChatIcon />
-              <ChatPanel />
+              <div className="fixed bottom-4 right-4 z-50">
+                <ChatIcon />
+                <ChatPanel />
+              </div>
             </main>
             <Footer />
           </div>
@@ -36,5 +40,4 @@ function App() {
     </Router>
   );
 }
-
 export default App;
