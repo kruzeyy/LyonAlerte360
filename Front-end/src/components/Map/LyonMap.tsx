@@ -85,7 +85,7 @@ const LyonMap: React.FC = () => {
           </div>
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-green-400 rounded"></div>
-            <span>Zones sécurisées</span>
+            <span>Zones à risque sismique / Zones à risque d'inondation</span>
           </div>
         </div>
       </div>
