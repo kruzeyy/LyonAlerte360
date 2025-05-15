@@ -62,9 +62,6 @@ const Activities: React.FC = () => {
                 <span className="font-semibold">Zone:</span> {activity.zone}
               </p>
             </div>
-            <div className="mt-4 pt-4 border-t">
-              <p className="text-xs text-red-600">⚠️ Ces activités sont présentées à titre humoristique. Ne prenez jamais de risques en cas d'inondation !</p>
-            </div>
           </div>
         ))}
       </div>
