@@ -111,9 +111,15 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
-#map {
-  height: 500px;
-  width: 100%;
-  margin-top: 2rem;
+.carte-image {
+  width: 400px;
+  border: 2px solid red;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+  transition: transform 0.3s ease;
+}
+
+.carte-image:hover {
+  transform: scale(1.05);
 }
 
