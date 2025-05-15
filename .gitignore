@@ -1,7 +1,0 @@
-# FRONTEND 
-/Front-end/node_modules
-/Front-end/package-lock.json
-
-# BACKEND
-/backend/node_modules
-/backend/package-lock.json
