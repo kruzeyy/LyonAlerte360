@@ -3,5 +3,5 @@
 /Front-end/package-lock.json
 
 # BACKEND
-/Back-end/node_modules
-/Back-end/package-lock.json
+/backend/node_modules
+/backend/package-lock.json
