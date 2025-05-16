@@ -37,7 +37,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
-    const socketURL = import.meta.env.VITE_ENV === "prod" ? import.meta.env.VITE_PUBLIC_URL : import.meta.env.VITE_BACKEND_URL;
+    const socketURL = import.meta.env.VITE_ENV === "prod" ? import.meta.env.VITE_WS_URL : import.meta.env.VITE_BACKEND_URL;
     const newSocket = io(socketURL);
     setSocket(newSocket);
 
