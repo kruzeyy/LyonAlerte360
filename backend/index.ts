@@ -4,11 +4,12 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { createServer } from "http";
 import { setupSocket } from "./src/socket";
+import fs from "fs";
 
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.SERVER_PORT || 4000;
 
 // CORS configuration
 app.use(
@@ -24,8 +25,22 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req: Request, res: Response) => {
-  res.status(200).send("Hello World");
+// Random line reader endpoint
+app.get("/random-line", async (req: Request, res: Response) => {
+  try {
+    const filePath = "./clean_file.csv";
+    const fileData = fs.readFileSync(filePath, "utf8").split("\n");
+
+    const randomIndex = Math.floor(Math.random() * fileData.length);
+    const randomLine = fileData[randomIndex].replace(/\d{4}-\d{2}-\d{2}.*/, ""); // Ignore dates
+
+    console.log(`Random line: ${randomLine.trim()}`);
+
+    res.status(200).json({ line: randomLine.trim() });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to read the file." });
+  }
 });
 
 // Create HTTP server
