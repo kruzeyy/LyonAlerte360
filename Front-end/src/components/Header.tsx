@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Bell, Menu } from "lucide-react";
 import { useAlerts } from "../context/AlertContext";
@@ -17,8 +17,17 @@ const zoneNames: Record<string, string> = {
 
 const Header: React.FC = () => {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-  const [hasSeenNotifications, setHasSeenNotifications] = useState(false);
-  const { alerts } = useAlerts();
+  const { alerts, unreadCount, resetUnreadCount } = useAlerts();
+  const [localUnreadCount, setLocalUnreadCount] = useState(0);
+  const prevAlertsLength = useRef(0);
+
+  useEffect(() => {
+    const difference = alerts.length - prevAlertsLength.current;
+    if (!isNotificationsOpen && difference > 0) {
+      setLocalUnreadCount((prev) => prev + difference);
+    }
+    prevAlertsLength.current = alerts.length;
+  }, [alerts, isNotificationsOpen]);
 
   return (
     <header className="bg-gradient-to-r from-red-600 to-orange-500 text-white shadow-lg">
@@ -46,17 +55,18 @@ const Header: React.FC = () => {
         <div className="flex items-center space-x-4">
           <div className="relative">
             <button
-              className="hidden md:flex items-center space-x-1 bg-red-700 hover:bg-red-800 px-3 py-1.5 rounded-full transition-colors"
+              className="relative hidden md:flex items-center space-x-1 bg-red-700 hover:bg-red-800 px-3 py-1.5 rounded-full transition-colors"
               onClick={() => {
                 setIsNotificationsOpen(!isNotificationsOpen);
-                setHasSeenNotifications(true);
+                setLocalUnreadCount(0); // remet le compteur à zéro à l'ouverture
               }}
             >
               <Bell size={16} />
               <span className="text-sm font-medium">Notifications</span>
-              {alerts.length > 0 && !hasSeenNotifications && (
+              {/* Affichage conditionnel de la pastille de notification */}
+              {localUnreadCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-yellow-400 text-red-800 text-xs w-5 h-5 flex items-center justify-center rounded-full">
-                  {alerts.length}
+                  {localUnreadCount}
                 </span>
               )}
             </button>
