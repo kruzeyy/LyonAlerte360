@@ -36,9 +36,6 @@ app.get("/", (req: Request, res: Response) => {
 app.get("/random-line", async (req: Request, res: Response) => {
   try {
     const filePath = "./clean_file.csv";
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).json({ error: "Data file not found." });
-    }
 
     const fileData = fs.readFileSync(filePath, "utf8").split("\n");
 
