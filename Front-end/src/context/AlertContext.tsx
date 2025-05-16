@@ -88,10 +88,21 @@ export const AlertProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
   const resetUnreadCount = () => setUnreadCount(0);
 
-  useEffect(() => {
-    const interval = setInterval(fetchRandomAlert, 5000);
-    return () => clearInterval(interval);
-  }, []);
+useEffect(() => {
+  let timeoutId: NodeJS.Timeout;
+
+  const scheduleNextAlert = () => {
+    const delay = Math.floor(Math.random() * (120000 - 5000 + 1)) + 5000;
+    timeoutId = setTimeout(async () => {
+      await fetchRandomAlert();
+      scheduleNextAlert();
+    }, delay);
+  };
+
+  scheduleNextAlert();
+
+  return () => clearTimeout(timeoutId);
+}, []);
 
   return (
     <AlertContext.Provider value={{ alerts, fetchRandomAlert, unreadCount, resetUnreadCount }}>
