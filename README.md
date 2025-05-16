@@ -1,12 +1,61 @@
-# React + Vite
+# LYON ALERTE 360
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Lyon Alerte 360 is a web application that provides real-time alerts and notifications for various events and incidents in the city of Lyon, France. The application is designed to keep users informed about important happenings in their area, such as weather updates like seismic alerts & flood warnings.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Real-time alerts and notifications
+- User-friendly interface
+- Activities & events
+- Map integration
+- Global chat
 
-## Expanding the ESLint configuration
+## Languages and Technologies
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+| Frontend | Backend |
+| -------- | ------- |
+| React    | Node.js |
+| Tailwind | Express |
+
+## How to run the project ?
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/kruzeyy/LyonAlerte360.git
+   ```
+
+2. Navigate to the project directory:
+   ```bash
+    cd LyonAlerte360
+   ```
+3. Navigate to the client directory:
+
+   ```bash
+    cd Front-end
+   ```
+
+4. Install the dependencies:
+
+   ```bash
+   npm install
+   ```
+
+5. Start the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+6. Navigate to the server directory:
+   ```bash
+    cd ../backend
+   ```
+7. Install the dependencies:
+   ```bash
+   npm install
+   ```
+8. Start the server:
+   ```bash
+   npm run dev
+   ```
