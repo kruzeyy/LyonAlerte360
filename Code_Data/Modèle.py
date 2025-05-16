@@ -28,10 +28,11 @@ df = df.drop(columns="catastrophe")
 
 # === 5. Extraction des informations de date ===
 df["date"] = pd.to_datetime(df["date"])
-df["day"] = df["date"].dt.day
+df["jour"] = df["date"].dt.day
 df["mois"] = df["date"].dt.month
 df["annee"] = df["date"].dt.year
 df = df.drop(columns="date")
+print( df.columns)
 
 # === 6. Encodage du quartier ===
 df = pd.get_dummies(df, columns=["quartier"])
@@ -50,34 +51,40 @@ y_pred = model.predict(X_test)
 # === 10. Évaluation ===
 print("=== Rapport de classification ===")
 print(classification_report(y_test, y_pred, target_names=mlb.classes_))
-
 # === 11. Exemple de prédiction manuelle ===
+
 nouvelle_donnee = pd.DataFrame([{
-    "temperature": 21.0,
-    "humidite": 68.0,
-    "force_moyenne_du_vecteur_de_vent": 3.5,
-    "force_du_vecteur_de_vent_max": 5.0,
-    "sismicite": 0.9,
-    "concentration_gaz": 500.0,
-    "pluie_totale": 331.0,
+    "temperature": 27.0,
+    "humidite": 53.8,
+    "force_moyenne_du_vecteur_de_vent": 7.3,
+    "force_du_vecteur_de_vent_max": 12.0,
+    "sismicite": 0.54,
+    "concentration_gaz": 153.52,
+    "pluie_totale": 118.84,
     "day":13,
     "mois": 1,
     "annee": 23000,
-    "quartier_Zone 2": 1,
+    "quartier_Zone 2": 0,
     "quartier_Zone 3": 0,
-    "quartier_Zone 4": 0
+    "quartier_Zone 4": 1
 
 }])
 
+
+
+def prediction(nouvelle_donnee):
+    # S'assurer que les colonnes sont dans le bon ordre
+    for col in X.columns:
+        if col not in nouvelle_donnee.columns:
+            nouvelle_donnee[col] = 0
+    nouvelle_donnee = nouvelle_donnee[X.columns]
+
+    # Prédiction
+    prediction = model.predict(nouvelle_donnee)
+    resultats = mlb.inverse_transform(prediction)
+    return resultats
+
 # S'assurer que les colonnes sont dans le bon ordre
-for col in X.columns:
-    if col not in nouvelle_donnee.columns:
-        nouvelle_donnee[col] = 0
-nouvelle_donnee = nouvelle_donnee[X.columns]
 
-# Prédiction
-prediction = model.predict(nouvelle_donnee)
-resultats = mlb.inverse_transform(prediction)
 print("=== Catastrophes prédites pour la nouvelle donnée ===")
-print(resultats)
-
+print(prediction(nouvelle_donnee))
