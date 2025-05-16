@@ -7,7 +7,10 @@ export const setupSocket = (server: HttpServer) => {
     cors: {
       origin: process.env.ENV === "prod" ? process.env.PUBLIC_URL : process.env.FRONTEND_URL,
       methods: ["GET", "POST"],
+      credentials: true,
     },
+    path: "/socket.io",
+    transports: ["websocket", "polling"],
   });
 
   io.on("connection", (socket) => {

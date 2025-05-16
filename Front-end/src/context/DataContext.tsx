@@ -35,7 +35,14 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const baseURL = import.meta.env.VITE_ENV === "prod" ? import.meta.env.VITE_WS_URL : import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
-    const newSocket = io(baseURL);
+    const newSocket = io(baseURL, {
+      path: "/socket.io/",
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      timeout: 20000,
+      transports: ["websocket", "polling"],
+    });
     setSocket(newSocket);
 
     newSocket.on("csvData", (data: CsvData) => {

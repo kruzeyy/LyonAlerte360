@@ -38,7 +38,14 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const socketURL = import.meta.env.VITE_ENV === "prod" ? import.meta.env.VITE_WS_URL : import.meta.env.VITE_BACKEND_URL;
-    const newSocket = io(socketURL);
+    const newSocket = io(socketURL, {
+      path: "/socket.io/",
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      timeout: 20000,
+      transports: ["websocket", "polling"],
+    });
     setSocket(newSocket);
 
     newSocket.on("connect", () => {
