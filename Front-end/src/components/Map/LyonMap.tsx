@@ -20,7 +20,7 @@ const LyonMap: React.FC = () => {
     height: "600px",
     width: "100%",
     borderRadius: "0.75rem",
-    border: "2px solid #1a202c" // dark border to match alert style
+    border: "2px solid #1a202c"
   };
 
   const districtStyle = (feature: any) => {
@@ -28,14 +28,14 @@ const LyonMap: React.FC = () => {
     const greenDistricts = ["Lyon 4", "Lyon 1", "Lyon 2"];
     const blueDistricts = ["Lyon 6", "Lyon 3", "Lyon 7", "Lyon 8"];
 
-    let color = "#E53E3E"; // couleur par défaut
+    let color = "#E53E3E";
 
     if (orangeDistricts.includes(feature.properties.nomreduit)) {
       color = "#FFA500";
     } else if (greenDistricts.includes(feature.properties.nomreduit)) {
-      color = "#38A169"; // vert
+      color = "#38A169";
     } else if (blueDistricts.includes(feature.properties.nomreduit)) {
-      color = "#4299E1"; // bleu
+      color = "#4299E1";
     }
 
     return {
