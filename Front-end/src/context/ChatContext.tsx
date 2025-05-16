@@ -37,7 +37,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
-    const newSocket = io("http://localhost:3000"); // Mets ici l'URL de ton backend
+    const newSocket = io("http://localhost:4000");
     setSocket(newSocket);
 
     newSocket.on("connect", () => {
