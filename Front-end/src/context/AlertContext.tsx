@@ -60,10 +60,15 @@ export const AlertProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         zones: [parseInt(alertData.quartier.match(/\d+/)?.[0] || "0")],
         severity: "medium",
         timestamp: new Date(),
-        description: `Alerte ${alertData.catastrophes.join(", ")} dans le ${alertData.quartier}`,
+        description: `Alerte ${alertData.catastrophes.join(", ")} dans la ${alertData.quartier}`,
       };
 
+      if (alertData.catastrophes.includes("aucun")) return;
+
       setAlerts((prev) => {
+        const zone = newAlert.zones[0];
+        const alreadyExists = prev.some(alert => alert.zones.includes(zone));
+        if (alreadyExists) return prev;
         setUnreadCount((count) => count + 1);
         return [...prev, newAlert];
       });
@@ -75,19 +80,8 @@ export const AlertProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const resetUnreadCount = () => setUnreadCount(0);
 
   useEffect(() => {
-    let timeoutId: ReturnType<typeof setTimeout>;
-
-    const scheduleNextAlert = () => {
-      const delay = Math.floor(Math.random() * (120000 - 5000 + 1)) + 5000;
-      timeoutId = setTimeout(async () => {
-        await fetchRandomAlert();
-        scheduleNextAlert();
-      }, delay);
-    };
-
-    scheduleNextAlert();
-
-    return () => clearTimeout(timeoutId);
+    const interval = setInterval(fetchRandomAlert, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   return <AlertContext.Provider value={{ alerts, fetchRandomAlert, unreadCount, resetUnreadCount }}>{children}</AlertContext.Provider>;
