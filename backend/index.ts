@@ -21,7 +21,6 @@ app.use(
   })
 );
 
-// Regular middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -32,11 +31,21 @@ app.get("/random-line", async (req: Request, res: Response) => {
     const fileData = fs.readFileSync(filePath, "utf8").split("\n");
 
     const randomIndex = Math.floor(Math.random() * fileData.length);
-    const randomLine = fileData[randomIndex].replace(/\d{4}-\d{2}-\d{2}.*/, ""); // Ignore dates
+    const line = fileData[randomIndex].split(",");
 
-    console.log(`Random line: ${randomLine.trim()}`);
+    const alertData = {
+      temperature: parseFloat(line[0]),
+      humidite: parseFloat(line[1]),
+      force_moyenne_du_vecteur_de_vent: parseFloat(line[2]),
+      force_du_vecteur_de_vent_max: parseFloat(line[3]),
+      quartier: line[5],
+      sismicite: parseFloat(line[6]),
+      concentration_gaz: parseFloat(line[7]),
+      pluie_totale: parseFloat(line[8]),
+      catastrophes: JSON.parse(line[9].replace(/'/g, '"')),
+    };
 
-    res.status(200).json({ line: randomLine.trim() });
+    res.status(200).json({ alertData });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to read the file." });
