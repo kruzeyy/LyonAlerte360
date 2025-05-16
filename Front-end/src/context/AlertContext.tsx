@@ -12,6 +12,8 @@ export interface Alert {
 interface AlertContextType {
   alerts: Alert[];
   fetchRandomAlert: () => Promise<void>;
+  unreadCount: number;
+  resetUnreadCount: () => void;
 }
 
 const zoneNames: Record<string, string> = {
@@ -26,25 +28,6 @@ const zoneNames: Record<string, string> = {
   "9": "9 ARR - Vaise / Gorge de Loup",
 };
 
-const alerts: Alert[] = [
-  // {
-  //   id: 1,
-  //   type: "earthquake",
-  //   zones: [9, 5, 4, 1, 2],
-  //   severity: "high",
-  //   timestamp: new Date(),
-  //   description: `Séisme détecté dans les zones : ${[9, 5, 4, 1, 2].map((z) => zoneNames[z.toString()]).join(", ")}`,
-  // },
-  // {
-  //   id: 2,
-  //   type: "flood",
-  //   zones: [4, 1, 2, 6, 3, 7, 8],
-  //   severity: "medium",
-  //   timestamp: new Date(),
-  //   description: `Risque d'inondation dans les zones : ${[4, 1, 2, 6, 3, 7, 8].map((z) => zoneNames[z.toString()]).join(", ")}`,
-  // },
-];
-
 const AlertContext = createContext<AlertContextType | undefined>(undefined);
 
 export const useAlerts = () => {
@@ -56,6 +39,9 @@ export const useAlerts = () => {
 };
 
 export const AlertProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [alerts, setAlerts] = React.useState<Alert[]>([]);
+  const [unreadCount, setUnreadCount] = React.useState(0);
+
   let inondation = "Risque d'inondation dans les zones : ";
   let seisme = "Séisme détecté dans les zones : ";
 
@@ -66,6 +52,22 @@ export const AlertProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
+
+      const alertData = data.alertData;
+
+      const newAlert: Alert = {
+        id: Date.now(), // ou un autre identifiant unique
+        type: alertData.catastrophes.includes("seisme") ? "earthquake" : "flood",
+        zones: [parseInt(alertData.quartier.match(/\d+/)?.[0] || "0")], // extrait le numéro de zone depuis "Zone 3"
+        severity: "medium", // adapter selon logique
+        timestamp: new Date(),
+        description: `Alerte ${alertData.catastrophes.join(", ")} dans le ${alertData.quartier}`,
+      };
+
+      setAlerts((prev) => {
+        setUnreadCount((count) => count + 1);
+        return [...prev, newAlert];
+      });
 
       console.log("data:", data);
 
@@ -84,10 +86,16 @@ export const AlertProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     }
   };
 
+  const resetUnreadCount = () => setUnreadCount(0);
+
   useEffect(() => {
     const interval = setInterval(fetchRandomAlert, 5000);
     return () => clearInterval(interval);
   }, []);
 
-  return <AlertContext.Provider value={{ alerts, fetchRandomAlert }}>{children}</AlertContext.Provider>;
+  return (
+    <AlertContext.Provider value={{ alerts, fetchRandomAlert, unreadCount, resetUnreadCount }}>
+      {children}
+    </AlertContext.Provider>
+  );
 };
