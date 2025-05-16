@@ -37,7 +37,6 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   useEffect(() => {
     const newSocket = io(baseURL, {
       transports: ["websocket"],
-      secure: true,
     });
     setSocket(newSocket);
 

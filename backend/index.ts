@@ -14,15 +14,16 @@ const port = process.env.SERVER_PORT || 4000;
 // CORS configuration
 app.use(
   cors({
-    origin: process.env.ENV === "prod" ? process.env.PUBLIC_URL : process.env.FRONTEND_URL,
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    origin: "*",
   })
 );
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.get("/", (req: Request, res: Response) => {
+  res.send("LyonAlert360 backend is running.");
+});
 
 // Random line reader endpoint
 app.get("/random-line", async (req: Request, res: Response) => {

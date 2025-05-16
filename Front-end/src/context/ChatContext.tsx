@@ -40,7 +40,6 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
     const socketURL = import.meta.env.VITE_ENV === "prod" ? import.meta.env.VITE_WS_URL : import.meta.env.VITE_BACKEND_URL;
     const newSocket = io(socketURL, {
       transports: ["websocket"],
-      secure: true,
     });
     setSocket(newSocket);
 
