@@ -42,12 +42,11 @@ export const AlertProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const [alerts, setAlerts] = React.useState<Alert[]>([]);
   const [unreadCount, setUnreadCount] = React.useState(0);
 
-  let inondation = "Risque d'inondation dans les zones : ";
-  let seisme = "Séisme détecté dans les zones : ";
+  const baseURL = import.meta.env.VITE_ENV === "prod" ? import.meta.env.VITE_PUBLIC_URL : import.meta.env.VITE_BACKEND_URL;
 
   const fetchRandomAlert = async () => {
     try {
-      const response = await fetch("http://localhost:4000/random-line");
+      const response = await fetch(`${baseURL}/random-line`);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -89,13 +88,20 @@ export const AlertProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const resetUnreadCount = () => setUnreadCount(0);
 
   useEffect(() => {
-    const interval = setInterval(fetchRandomAlert, 5000);
-    return () => clearInterval(interval);
+    let timeoutId: ReturnType<typeof setTimeout>;
+
+    const scheduleNextAlert = () => {
+      const delay = Math.floor(Math.random() * (120000 - 5000 + 1)) + 5000;
+      timeoutId = setTimeout(async () => {
+        await fetchRandomAlert();
+        scheduleNextAlert();
+      }, delay);
+    };
+
+    scheduleNextAlert();
+
+    return () => clearTimeout(timeoutId);
   }, []);
 
-  return (
-    <AlertContext.Provider value={{ alerts, fetchRandomAlert, unreadCount, resetUnreadCount }}>
-      {children}
-    </AlertContext.Provider>
-  );
+  return <AlertContext.Provider value={{ alerts, fetchRandomAlert, unreadCount, resetUnreadCount }}>{children}</AlertContext.Provider>;
 };

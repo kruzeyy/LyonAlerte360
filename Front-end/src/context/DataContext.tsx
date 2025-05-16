@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { io, Socket } from 'socket.io-client';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { io, Socket } from "socket.io-client";
 
 interface CsvData {
   temperature: number;
@@ -23,7 +23,7 @@ const DataContext = createContext<DataContextType | undefined>(undefined);
 export const useData = () => {
   const context = useContext(DataContext);
   if (!context) {
-    throw new Error('useData must be used within a DataProvider');
+    throw new Error("useData must be used within a DataProvider");
   }
   return context;
 };
@@ -32,13 +32,15 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [latestData, setLatestData] = useState<CsvData | null>(null);
   const [socket, setSocket] = useState<Socket | null>(null);
 
+  const baseURL = import.meta.env.VITE_ENV === "prod" ? import.meta.env.VITE_PUBLIC_URL : import.meta.env.VITE_BACKEND_URL;
+
   useEffect(() => {
-    const newSocket = io(import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000');
+    const newSocket = io(baseURL);
     setSocket(newSocket);
 
-    newSocket.on('csvData', (data: CsvData) => {
+    newSocket.on("csvData", (data: CsvData) => {
       setLatestData(data);
-      console.log('Received new data:', data);
+      console.log("Received new data:", data);
     });
 
     return () => {
@@ -46,9 +48,5 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
   }, []);
 
-  return (
-    <DataContext.Provider value={{ latestData }}>
-      {children}
-    </DataContext.Provider>
-  );
+  return <DataContext.Provider value={{ latestData }}>{children}</DataContext.Provider>;
 };
