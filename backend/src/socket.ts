@@ -5,7 +5,7 @@ import { Server as HttpServer } from "http";
 export const setupSocket = (server: HttpServer) => {
   const io = new Server(server, {
     cors: {
-      origin: process.env.FRONTEND_URL,
+      origin: process.env.ENV === "prod" ? process.env.PUBLIC_URL : process.env.FRONTEND_URL,
       methods: ["GET", "POST"],
     },
   });
