@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin } from "lucide-react";
 
 const Footer: React.FC = () => {
@@ -33,24 +34,24 @@ const Footer: React.FC = () => {
             <h3 className="text-lg font-semibold mb-4">Liens utiles</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="hover:text-red-400 transition-colors">
+                <Link to="/about" className="hover:text-red-400 transition-colors">
                   À propos
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-red-400 transition-colors">
+                <Link to="/activities" className="hover:text-red-400 transition-colors">
                   Services
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-red-400 transition-colors">
+                <Link to="/" className="hover:text-red-400 transition-colors">
                   Plan du site
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-red-400 transition-colors">
+                <Link to="/legal" className="hover:text-red-400 transition-colors">
                   Mentions légales
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

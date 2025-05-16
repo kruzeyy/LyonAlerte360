@@ -1,14 +1,14 @@
+// src/server.ts
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import { createServer } from "http";
-import { Server } from "socket.io";
+import { setupSocket } from "./src/socket";
 
-// Load environment variables
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 
 // CORS configuration
 app.use(
@@ -31,29 +31,8 @@ app.get("/", (req: Request, res: Response) => {
 // Create HTTP server
 const server = createServer(app);
 
-// Socket.IO setup
-const io = new Server(server, {
-  cors: {
-    origin: process.env.FRONTEND_URL,
-    methods: ["GET", "POST"],
-  },
-});
-
-// Socket.IO connection
-io.on("connection", (socket) => {
-  console.log("New user connected:", socket.id);
-
-  // Listen for chat messages
-  socket.on("message", (message) => {
-    console.log("Message received:", message);
-    io.emit("message", message); // Broadcast to everyone
-  });
-
-  // Handle user disconnect
-  socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
-  });
-});
+// Setup WebSocket
+setupSocket(server);
 
 // Start the server
 server.listen(port, () => {

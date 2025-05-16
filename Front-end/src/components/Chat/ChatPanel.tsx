@@ -1,5 +1,6 @@
+// ChatPanel.tsx
 import React, { useState, useRef, useEffect } from "react";
-import { Send, X, User } from "lucide-react";
+import { Send, X } from "lucide-react";
 import { useChat } from "../../context/ChatContext";
 import { Bell } from "lucide-react";
 
@@ -12,17 +13,10 @@ const ChatPanel: React.FC = () => {
     e.preventDefault();
     if (inputValue.trim() === "") return;
 
-    // Add user message
     addMessage(inputValue, true);
     setInputValue("");
-
-    // Simulate response after a short delay
-    setTimeout(() => {
-      addMessage("Merci pour votre message. Notre équipe a été notifiée et reviendra vers vous rapidement.", false);
-    }, 1000);
   };
 
-  // Scroll to bottom when messages change
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -34,9 +28,7 @@ const ChatPanel: React.FC = () => {
       className={`fixed bottom-24 right-6 w-80 sm:w-96 bg-white rounded-lg shadow-xl z-30 overflow-hidden transition-all duration-300 transform ${
         isOpen ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0 pointer-events-none"
       }`}
-      style={{ maxHeight: "calc(100% - 160px)" }}
     >
-      {/* Header */}
       <div className="bg-gradient-to-r from-red-600 to-orange-500 text-white p-4 flex justify-between items-center">
         <h3 className="font-bold">Assistance LyonAlert360</h3>
         <button onClick={closeChat} className="p-1 rounded-full hover:bg-red-700 transition-colors" aria-label="Close chat">
@@ -44,7 +36,6 @@ const ChatPanel: React.FC = () => {
         </button>
       </div>
 
-      {/* Messages */}
       <div className="p-4 h-96 overflow-y-auto bg-gray-50">
         {messages.map((message) => (
           <div key={message.id} className={`mb-4 flex ${message.isUser ? "justify-end" : "justify-start"}`}>
@@ -53,21 +44,15 @@ const ChatPanel: React.FC = () => {
                 <Bell className="h-4 w-4" />
               </div>
             )}
-            <div className={`px-4 py-2 rounded-lg max-w-[80%] ${message.isUser ? "bg-blue-600 text-white rounded-br-none" : "bg-gray-200 text-gray-800 rounded-bl-none"}`}>
+            <div className={`px-4 py-2 rounded-lg max-w-[80%] ${message.isUser ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-800"}`}>
               <p className="text-sm">{message.text}</p>
               <p className="text-xs mt-1 opacity-70">{message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</p>
             </div>
-            {message.isUser && (
-              <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center ml-2 flex-shrink-0">
-                <User className="h-4 w-4" />
-              </div>
-            )}
           </div>
         ))}
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input */}
       <form onSubmit={handleSubmit} className="p-3 border-t border-gray-200 flex">
         <input
           type="text"
