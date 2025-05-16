@@ -37,10 +37,6 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   useEffect(() => {
     const newSocket = io(baseURL, {
       path: "/socket.io/",
-      reconnectionAttempts: 5,
-      reconnectionDelay: 1000,
-      reconnectionDelayMax: 5000,
-      timeout: 20000,
       transports: ["websocket", "polling"],
     });
     setSocket(newSocket);
