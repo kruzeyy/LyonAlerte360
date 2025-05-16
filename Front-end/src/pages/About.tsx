@@ -37,6 +37,11 @@ const teamMembers = [
     description: "LyonAlert360",
   },
   {
+    name: "Kaffa Hamed",
+    role: "Dev Web",
+    description: "LyonAlert360",
+  },
+  {
     name: "Maxime Pontus",
     role: "Dev Web",
     description: "LyonAlert360",
