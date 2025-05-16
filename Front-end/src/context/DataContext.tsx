@@ -32,7 +32,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [latestData, setLatestData] = useState<CsvData | null>(null);
   const [socket, setSocket] = useState<Socket | null>(null);
 
-  const baseURL = import.meta.env.VITE_ENV === "prod" ? import.meta.env.VITE_PUBLIC_URL : import.meta.env.VITE_BACKEND_URL;
+  const baseURL = import.meta.env.VITE_ENV === "prod" ? import.meta.env.VITE_WS_URL : import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     const newSocket = io(baseURL);
